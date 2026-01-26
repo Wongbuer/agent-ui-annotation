@@ -23,8 +23,9 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
           cache: pnpm
+          registry-url: 'https://registry.npmjs.org/'
 
       - name: Upgrade npm for OIDC support
         run: npm install -g npm@latest
@@ -37,9 +38,6 @@ jobs:
 
       - name: Build
         run: pnpm build
-
-      - name: Configure npm registry
-        run: npm config set registry https://registry.npmjs.org/
 
       - name: Publish to npm
         run: npm publish --provenance --access public

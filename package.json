@@ -86,7 +86,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YeomansIII/agent-ui-annotation.git"
+    "url": "https://github.com/YeomansIII/agent-ui-annotation"
   },
   "homepage": "https://github.com/YeomansIII/agent-ui-annotation#readme",
   "bugs": {
