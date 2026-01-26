@@ -26,7 +26,7 @@ export interface EventBus<Events extends Record<string, unknown>> {
 export function createEventBus<Events extends Record<string, unknown> = EventMap>(): EventBus<Events> {
   type HandlerMap = Map<keyof Events, Set<EventHandler<unknown>>>;
 
-  let handlers: HandlerMap = new Map();
+  const handlers: HandlerMap = new Map();
   let isDestroyed = false;
 
   const emit = <K extends keyof Events>(event: K, payload: Events[K]): void => {

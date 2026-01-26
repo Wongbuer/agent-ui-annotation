@@ -26,7 +26,7 @@ export interface Store<T> {
  */
 export function createStore<T extends object>(initialState: T): Store<T> {
   let state: T = { ...initialState };
-  let listeners: Set<{ listener: Listener<T>; selector?: Selector<T, unknown>; prevSelected?: unknown }> = new Set();
+  const listeners: Set<{ listener: Listener<T>; selector?: Selector<T, unknown>; prevSelected?: unknown }> = new Set();
   let isBatching = false;
   let hasChanges = false;
   let isDestroyed = false;

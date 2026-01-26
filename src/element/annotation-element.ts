@@ -277,10 +277,11 @@ export class AnnotationElement extends HTMLElement {
         this.core.freeze.toggle();
         break;
 
-      case 'toggle-markers':
+      case 'toggle-markers': {
         const state = this.core.store.getState();
         this.core.store.setState({ markersVisible: !state.markersVisible });
         break;
+      }
 
       case 'copy':
         this.core.copyOutput();
@@ -290,18 +291,20 @@ export class AnnotationElement extends HTMLElement {
         this.core.scopes.clearAllScopes();
         break;
 
-      case 'theme':
+      case 'theme': {
         const currentTheme = this.core.getSettings().theme;
         const resolved = resolveTheme(currentTheme);
         const newTheme = resolved === 'dark' ? 'light' : 'dark';
         this.core.updateSettings({ theme: newTheme });
         this.updateThemeAttribute();
         break;
+      }
 
-      case 'settings':
+      case 'settings': {
         const currentState = this.core.store.getState();
         this.core.store.setState({ settingsPanelVisible: !currentState.settingsPanelVisible });
         break;
+      }
 
       case 'popup-close':
       case 'popup-cancel':
@@ -339,10 +342,11 @@ export class AnnotationElement extends HTMLElement {
     const value = settingElement.getAttribute('data-value');
 
     switch (setting) {
-      case 'outputLevel':
+      case 'outputLevel': {
         const select = settingElement as HTMLSelectElement;
-        this.core.updateSettings({ outputLevel: select.value as any });
+        this.core.updateSettings({ outputLevel: select.value as OutputLevel });
         break;
+      }
 
       case 'scopeColor':
         if (value) {
