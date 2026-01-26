@@ -335,6 +335,98 @@
     .console-line.error {
       color: #FF3B30;
     }
+
+    /* Frameworks section */
+    .frameworks-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .frameworks-section h2 {
+      margin-bottom: 1rem;
+    }
+
+    .architecture-note {
+      background: linear-gradient(135deg, #f8f4ff 0%, #f0e8ff 100%);
+      border-left: 4px solid #AF52DE;
+      padding: 1rem 1.25rem;
+      border-radius: 0 8px 8px 0;
+      margin-bottom: 1.5rem;
+      color: #4a3662;
+    }
+
+    .architecture-note strong {
+      color: #AF52DE;
+    }
+
+    .framework-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 700px) {
+      .framework-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .framework-card {
+      background: #f9f9f9;
+      border-radius: 10px;
+      padding: 1.25rem;
+      border: 1px solid #e5e5e5;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      min-width: 0;
+    }
+
+    .framework-card:hover {
+      border-color: #AF52DE;
+      box-shadow: 0 4px 12px rgba(175, 82, 222, 0.1);
+    }
+
+    .framework-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .framework-icon {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      border: 1px solid #e5e5e5;
+    }
+
+    .framework-card h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .framework-import {
+      background: #1a1a1a;
+      color: #34C759;
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+      font-size: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .framework-features {
+      font-size: 0.875rem;
+      color: #666;
+    }
   </style>
 </head>
 <body>
@@ -346,8 +438,9 @@
       </div>
       <ul>
         <li><a href="#features">Features</a></li>
+        <li><a href="#frameworks">Frameworks</a></li>
         <li><a href="#demo">Demo</a></li>
-        <li><a href="#docs">Docs</a></li>
+        <li><a href="https://github.com/YeomansIII/agent-ui-annotation#readme" target="_blank">Docs</a></li>
         <li><a href="https://github.com/YeomansIII/agent-ui-annotation" target="_blank">GitHub</a></li>
       </ul>
     </nav>
@@ -396,6 +489,50 @@
         <h3>Persistent</h3>
         <p>Your annotations are saved automatically and persist across page reloads.</p>
       </div>
+    </section>
+
+    <section id="frameworks" class="frameworks-section">
+      <h2>Supported Frameworks</h2>
+      <p class="architecture-note">
+        <strong>Framework-agnostic core:</strong> Built on native Web Components with a Shadow DOM rendering layer. The core business logic is completely decoupled from any framework, with thin adapter layers for seamless integration.
+      </p>
+      <div class="framework-grid">
+        <div class="framework-card">
+          <div class="framework-header">
+            <div class="framework-icon">JS</div>
+            <h4>Vanilla JS</h4>
+          </div>
+          <div class="framework-import">import { createAnnotation } from 'agent-ui-annotation/vanilla'</div>
+          <p class="framework-features">Factory function API with callbacks for maximum flexibility</p>
+        </div>
+        <div class="framework-card">
+          <div class="framework-header">
+            <div class="framework-icon">R</div>
+            <h4>React</h4>
+          </div>
+          <div class="framework-import">import { AgentUIAnnotation, useAgentUIAnnotation } from 'agent-ui-annotation/react'</div>
+          <p class="framework-features">Component + hook for state management integration</p>
+        </div>
+        <div class="framework-card">
+          <div class="framework-header">
+            <div class="framework-icon">V</div>
+            <h4>Vue 3</h4>
+          </div>
+          <div class="framework-import">import { AgentUIAnnotation, useAnnotation } from 'agent-ui-annotation/vue'</div>
+          <p class="framework-features">Component + composable for reactive integration</p>
+        </div>
+        <div class="framework-card">
+          <div class="framework-header">
+            <div class="framework-icon">A</div>
+            <h4>Angular</h4>
+          </div>
+          <div class="framework-import">&lt;agent-ui-annotation&gt; with CUSTOM_ELEMENTS_SCHEMA</div>
+          <p class="framework-features">Native Web Component support via custom elements</p>
+        </div>
+      </div>
+      <p style="margin-top: 1.5rem; color: #666;">
+        See the <a href="https://github.com/YeomansIII/agent-ui-annotation#readme" target="_blank" style="color: #AF52DE;">README</a> for complete documentation and usage examples.
+      </p>
     </section>
 
     <section id="demo" class="demo-section">

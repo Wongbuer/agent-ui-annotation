@@ -1,12 +1,14 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
 import dts from 'vite-plugin-dts';
+import vue from '@vitejs/plugin-vue';
 
 export default defineConfig({
   plugins: [
+    vue(),
     dts({
       include: ['src'],
-      rollupTypes: true,
+      rollupTypes: false,
     }),
   ],
   resolve: {
@@ -19,18 +21,24 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'AgentUIAnnotation',
-      formats: ['es', 'umd'],
-      fileName: (format) => `agent-ui-annotation.${format === 'es' ? 'js' : 'umd.cjs'}`,
+      entry: {
+        'agent-ui-annotation': resolve(__dirname, 'src/index.ts'),
+        'adapters/react/AgentUIAnnotation': resolve(__dirname, 'src/adapters/react/AgentUIAnnotation.tsx'),
+        'adapters/vanilla/index': resolve(__dirname, 'src/adapters/vanilla/index.ts'),
+        'adapters/vue/index': resolve(__dirname, 'src/adapters/vue/index.ts'),
+      },
+      formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', 'vue'],
       output: {
         globals: {
           react: 'React',
           'react-dom': 'ReactDOM',
+          vue: 'Vue',
         },
+        // Preserve module structure for proper tree-shaking
+        preserveModules: false,
       },
     },
     sourcemap: true,

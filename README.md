@@ -71,6 +71,37 @@ function App() {
 }
 ```
 
+### Vue 3
+
+```vue
+<script setup lang="ts">
+import { AgentUIAnnotation, useAgentUIAnnotation } from 'agent-ui-annotation/vue';
+import type { Annotation } from 'agent-ui-annotation/vue';
+
+const { ref: annotationRef, activate, copyOutput } = useAgentUIAnnotation();
+
+function handleCreate(annotation: Annotation) {
+  console.log('Created:', annotation);
+}
+
+function handleCopy(markdown: string) {
+  console.log('Copied:', markdown);
+}
+</script>
+
+<template>
+  <AgentUIAnnotation
+    ref="annotationRef"
+    theme="auto"
+    output-level="standard"
+    @annotation-create="handleCreate"
+    @copy="handleCopy"
+  />
+  <button @click="activate">Start Annotating</button>
+  <button @click="copyOutput()">Copy Output</button>
+</template>
+```
+
 ### Angular
 
 ```typescript
@@ -212,7 +243,7 @@ agent-ui-annotation uses a three-layer architecture:
 
 1. **Core** - Framework-agnostic business logic
 2. **Web Components** - Shadow DOM rendering
-3. **Framework Adapters** - React, Angular, Vanilla JS wrappers
+3. **Framework Adapters** - React, Vue 3, Angular, Vanilla JS wrappers
 
 ## Development
 

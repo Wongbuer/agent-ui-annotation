@@ -3,13 +3,12 @@
   "version": "0.1.0",
   "description": "Web page annotation toolbar for AI coding agents",
   "type": "module",
-  "main": "./dist/agent-ui-annotation.umd.cjs",
+  "main": "./dist/agent-ui-annotation.js",
   "module": "./dist/agent-ui-annotation.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/agent-ui-annotation.js",
-      "require": "./dist/agent-ui-annotation.umd.cjs",
       "types": "./dist/index.d.ts"
     },
     "./react": {
@@ -19,6 +18,10 @@
     "./vanilla": {
       "import": "./dist/adapters/vanilla/index.js",
       "types": "./dist/adapters/vanilla/index.d.ts"
+    },
+    "./vue": {
+      "import": "./dist/adapters/vue/index.js",
+      "types": "./dist/adapters/vue/index.d.ts"
     }
   },
   "files": [
@@ -43,23 +46,29 @@
     "@types/react-dom": "^19.2.3",
     "@typescript-eslint/eslint-plugin": "^8.53.1",
     "@typescript-eslint/parser": "^8.53.1",
+    "@vitejs/plugin-vue": "^6.0.3",
     "eslint": "^9.39.2",
     "jsdom": "^27.4.0",
     "typescript": "^5.3.0",
     "typescript-eslint": "^8.53.1",
     "vite": "^5.0.0",
     "vite-plugin-dts": "^3.6.0",
-    "vitest": "^1.0.0"
+    "vitest": "^1.0.0",
+    "vue": "^3.5.27"
   },
   "peerDependencies": {
     "react": ">=17.0.0",
-    "react-dom": ">=17.0.0"
+    "react-dom": ">=17.0.0",
+    "vue": ">=3.3.0"
   },
   "peerDependenciesMeta": {
     "react": {
       "optional": true
     },
     "react-dom": {
+      "optional": true
+    },
+    "vue": {
       "optional": true
     }
   },
