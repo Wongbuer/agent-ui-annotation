@@ -200,6 +200,133 @@ When active, clicks are blocked from triggering buttons/links while annotating (
 ### Persistence
 Annotations are saved to localStorage and persist across page reloads (7-day retention).
 
+## Internationalization (i18n)
+
+agent-ui-annotation supports multiple languages with built-in English and Simplified Chinese translations.
+
+### Basic Usage
+
+Initialize i18n once at your app's entry point, before rendering any components:
+
+```javascript
+import { initI18n } from 'agent-ui-annotation';
+
+// Initialize at app startup (optional for English - it's the default)
+initI18n({ locale: 'zh-CN' });
+```
+
+> **Note:** If you're using English, you can skip calling `initI18n()` entirely - English is the default locale.
+
+### Framework Examples
+
+**React** (in App.tsx or main.tsx):
+```tsx
+import { initI18n } from 'agent-ui-annotation';
+import { AgentUIAnnotation } from 'agent-ui-annotation/react';
+
+// Initialize once at app startup
+initI18n({ locale: 'zh-CN' });
+
+function App() {
+  return <AgentUIAnnotation theme="auto" />;
+}
+```
+
+**Vue** (in main.ts):
+```typescript
+import { initI18n } from 'agent-ui-annotation';
+
+initI18n({ locale: 'zh-CN' });
+
+// Then create your Vue app...
+```
+
+**Svelte** (in +layout.ts or main entry):
+```typescript
+import { initI18n } from 'agent-ui-annotation';
+
+initI18n({ locale: 'zh-CN' });
+```
+
+**Vanilla JS:**
+```javascript
+import { createAnnotation, initI18n } from 'agent-ui-annotation/vanilla';
+
+// Option 1: Use initI18n (recommended for consistency with other frameworks)
+initI18n({ locale: 'zh-CN' });
+const annotation = createAnnotation({ theme: 'auto' });
+
+// Option 2: Pass locale directly to createAnnotation
+const annotation = createAnnotation({ locale: 'zh-CN' });
+```
+
+### Custom Translations
+
+Override specific strings while keeping the rest:
+
+```javascript
+import { initI18n } from 'agent-ui-annotation';
+
+initI18n({
+  locale: 'en',
+  translations: {
+    toolbar: {
+      copiedFeedback: 'Successfully copied!',
+    },
+    popup: {
+      addFeedback: 'Enter your notes...',
+    },
+  },
+});
+```
+
+### Output Translation
+
+By default, markdown output stays in English for AI compatibility. To translate output:
+
+```javascript
+initI18n({
+  locale: 'zh-CN',
+  translateOutput: true, // Translate markdown labels
+});
+```
+
+### Built-in Locales
+
+| Locale | Language |
+|--------|----------|
+| `en` | English (default) |
+| `zh-CN` | Simplified Chinese |
+
+### Register Custom Locale
+
+```javascript
+import { registerLocale, initI18n, en } from 'agent-ui-annotation';
+
+const customLocale = {
+  ...en,
+  toolbar: {
+    ...en.toolbar,
+    settings: 'Einstellungen',
+  },
+};
+
+registerLocale('de', customLocale);
+initI18n({ locale: 'de' });
+```
+
+### Contributing Translations
+
+We welcome contributions for additional languages! To add a new locale:
+
+1. Copy `src/core/i18n/locales/en.ts` as a template
+2. Create a new file like `src/core/i18n/locales/de.ts` for your language
+3. Translate all strings, keeping the same key structure
+4. Export from `src/core/i18n/index.ts`
+5. Submit a pull request
+
+See the [en.ts](src/core/i18n/locales/en.ts) and [zh-CN.ts](src/core/i18n/locales/zh-CN.ts) files for examples.
+
 ## API Reference
 
 ### Options
@@ -214,6 +341,13 @@ interface AnnotationOptions {
   onAnnotationDelete?: (id: string) => void;
   onAnnotationsClear?: (annotations: Annotation[]) => void;
   onCopy?: (content: string, level: OutputLevel) => void;
+}
+
+// i18n is configured separately via initI18n()
+interface I18nOptions {
+  locale?: string;                    // e.g., 'en', 'zh-CN'
+  translations?: PartialTranslations; // Custom translation overrides
+  translateOutput?: boolean;          // Translate markdown output (default: false)
 }
 ```
 
@@ -239,6 +373,8 @@ interface AnnotationInstance {
 | `output-level` | `compact` \| `standard` \| `detailed` \| `forensic` | `standard` | Output detail level |
 | `annotation-color` | string | `#AF52DE` | Marker color |
 | `disabled` | boolean | `false` | Disable the toolbar |
+
+> **Note:** For i18n, call `initI18n()` at app startup rather than using component attributes.
 
 ### Custom Events
 

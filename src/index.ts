@@ -102,3 +102,16 @@ export {
   resolveTheme,
   getAccentColor,
 } from './themes';
+
+// i18n
+export {
+  initI18n,
+  registerLocale,
+  t,
+  tOutput,
+  en,
+  zhCN,
+  type TranslationStrings,
+  type PartialTranslationStrings,
+  type I18nOptions,
+} from './core/i18n';

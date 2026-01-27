@@ -3,6 +3,7 @@
  */
 
 import type { Scope, ElementInfo } from '../../core/types';
+import { t } from '../../core/i18n';
 import { icons } from './toolbar';
 
 export interface PopupRenderOptions {
@@ -80,11 +81,11 @@ export function renderPopup(options: PopupRenderOptions): string {
       .slice(0, 5)
       .map(i => `<li>${escapeHtml(i.humanReadable)}</li>`)
       .join('');
-    const remaining = multiSelectInfos.length > 5 ? `<li>...and ${multiSelectInfos.length - 5} more</li>` : '';
+    const remaining = multiSelectInfos.length > 5 ? `<li>${t('popup.andMore', { count: multiSelectInfos.length - 5 })}</li>` : '';
 
     headerContent = `
       <div class="popup-multiselect-header">
-        <div class="popup-element">${multiSelectInfos.length} elements selected</div>
+        <div class="popup-element">${t('popup.elementsSelected', { count: multiSelectInfos.length })}</div>
         <ul class="popup-element-list">${elementList}${remaining}</ul>
       </div>
     `;
@@ -101,7 +102,7 @@ export function renderPopup(options: PopupRenderOptions): string {
     <div class="popup-popover ${isShaking ? 'shake' : ''}" style="left: ${position.left}; top: ${position.top};" data-annotation-popup>
       <div class="popup-header">
         ${headerContent}
-        <button class="popup-close" data-action="popup-close" title="Close">
+        <button class="popup-close" data-action="popup-close" title="${t('popup.close')}">
           ${icons.x}
         </button>
       </div>
@@ -109,7 +110,7 @@ export function renderPopup(options: PopupRenderOptions): string {
       <div class="popup-body">
         <textarea
           class="popup-textarea"
-          placeholder="${isMultiSelect ? 'Add feedback for all selected elements...' : 'Add your feedback...'}"
+          placeholder="${isMultiSelect ? t('popup.addFeedbackMulti') : t('popup.addFeedback')}"
           data-popup-input
           autofocus
         >${escapeHtml(comment)}</textarea>
@@ -118,14 +119,14 @@ export function renderPopup(options: PopupRenderOptions): string {
       <div class="popup-footer">
         ${isEditing ? `
           <button class="popup-btn danger" data-action="popup-delete">
-            Delete
+            ${t('popup.delete')}
           </button>
         ` : ''}
         <button class="popup-btn" data-action="popup-cancel">
-          Cancel
+          ${t('popup.cancel')}
         </button>
         <button class="popup-btn primary" data-action="popup-submit">
-          ${isEditing ? 'Save' : isMultiSelect ? `Add ${multiSelectInfos.length} Scopes` : 'Add Scope'}
+          ${isEditing ? t('popup.save') : isMultiSelect ? t('popup.addScopes', { count: multiSelectInfos.length }) : t('popup.addScope')}
         </button>
       </div>
     </div>

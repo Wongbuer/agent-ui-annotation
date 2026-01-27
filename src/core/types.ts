@@ -278,3 +278,6 @@ export const SCOPE_COLORS = {
 } as const;
 
 export type AnnotationColor = keyof typeof SCOPE_COLORS;
+
+/** Re-export i18n types for convenience */
+export type { TranslationStrings, PartialTranslationStrings, I18nOptions, BuiltInLocale } from './i18n/types';

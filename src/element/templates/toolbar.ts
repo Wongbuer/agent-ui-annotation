@@ -2,6 +2,8 @@
  * Toolbar template and icons
  */
 
+import { t } from '../../core/i18n';
+
 /** SVG Icons */
 export const icons = {
   scope: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -84,7 +86,7 @@ export const icons = {
 export function renderCollapsedToolbar(scopeCount: number): string {
   return `
     <div class="toolbar collapsed" data-annotation-toolbar>
-      <button class="toolbar-btn toggle-btn" title="Activate agent-ui-annotation" data-action="toggle">
+      <button class="toolbar-btn toggle-btn" title="${t('toolbar.activate')}" data-action="toggle">
         ${icons.scope}
         ${scopeCount > 0 ? `<span class="badge">${scopeCount}</span>` : ''}
       </button>
@@ -118,15 +120,15 @@ export function renderExpandedToolbar(options: {
 
   return `
     <div class="toolbar${showEntranceAnimation ? ' entering' : ''}" data-annotation-toolbar>
-      ${showCopiedFeedback ? '<div class="feedback success">Copied to clipboard!</div>' : ''}
-      ${showClearedFeedback ? '<div class="feedback">Cleared all scopes</div>' : ''}
+      ${showCopiedFeedback ? `<div class="feedback success">${t('toolbar.copiedFeedback')}</div>` : ''}
+      ${showClearedFeedback ? `<div class="feedback">${t('toolbar.clearedFeedback')}</div>` : ''}
       ${settingsPanelHtml}
 
-      <button class="toolbar-btn ${isFrozen ? 'active' : ''}" title="${isFrozen ? 'Unfreeze' : 'Freeze'} animations" data-action="freeze">
+      <button class="toolbar-btn ${isFrozen ? 'active' : ''}" title="${isFrozen ? t('toolbar.unfreeze') : t('toolbar.freeze')}" data-action="freeze">
         ${isFrozen ? icons.unfreeze : icons.freeze}
       </button>
 
-      <button class="toolbar-btn ${markersVisible ? 'active' : ''}" title="${markersVisible ? 'Hide' : 'Show'} markers" data-action="toggle-markers">
+      <button class="toolbar-btn ${markersVisible ? 'active' : ''}" title="${markersVisible ? t('toolbar.hideMarkers') : t('toolbar.showMarkers')}" data-action="toggle-markers">
         ${markersVisible ? icons.eye : icons.eyeOff}
       </button>
 
@@ -139,25 +141,25 @@ export function renderExpandedToolbar(options: {
 
       <div class="separator"></div>
 
-      <button class="toolbar-btn" title="Copy to clipboard" data-action="copy" ${scopeCount === 0 ? 'disabled' : ''}>
+      <button class="toolbar-btn" title="${t('toolbar.copyToClipboard')}" data-action="copy" ${scopeCount === 0 ? 'disabled' : ''}>
         ${icons.copy}
       </button>
 
-      <button class="toolbar-btn" title="Clear all" data-action="clear" ${scopeCount === 0 ? 'disabled' : ''}>
+      <button class="toolbar-btn" title="${t('toolbar.clearAll')}" data-action="clear" ${scopeCount === 0 ? 'disabled' : ''}>
         ${icons.trash}
       </button>
 
       <div class="separator"></div>
 
-      <button class="toolbar-btn" title="Toggle theme" data-action="theme">
+      <button class="toolbar-btn" title="${t('toolbar.toggleTheme')}" data-action="theme">
         ${isDarkMode ? icons.sun : icons.moon}
       </button>
 
-      <button class="toolbar-btn" title="Settings" data-action="settings">
+      <button class="toolbar-btn" title="${t('toolbar.settings')}" data-action="settings">
         ${icons.settings}
       </button>
 
-      <button class="toolbar-btn" title="Close" data-action="close">
+      <button class="toolbar-btn" title="${t('toolbar.close')}" data-action="close">
         ${icons.x}
       </button>
     </div>

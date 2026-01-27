@@ -2,11 +2,12 @@
  * Vanilla JS adapter for Annotation
  */
 
-import type { Scope, AnnotationId, OutputLevel, ThemeMode, Settings } from '../../core/types';
+import type { Scope, AnnotationId, OutputLevel, ThemeMode, Settings, PartialTranslationStrings } from '../../core/types';
 import {
   AnnotationElement,
   registerAnnotationElement,
 } from '../../element/annotation-element';
+import { initI18n } from '../../core/i18n';
 
 // Ensure custom element is registered
 registerAnnotationElement();
@@ -32,6 +33,12 @@ export interface AnnotationOptions {
   onScopesClear?: (scopes: Scope[]) => void;
   /** Callback when output is copied */
   onCopy?: (content: string, level: OutputLevel) => void;
+  /** Locale for UI strings (default: 'en') */
+  locale?: string;
+  /** Custom translation overrides */
+  translations?: PartialTranslationStrings;
+  /** Whether to translate markdown output (default: false for AI compatibility) */
+  translateOutput?: boolean;
 }
 
 export interface AnnotationInstance {
@@ -81,7 +88,15 @@ export function createAnnotation(options: AnnotationOptions = {}): AnnotationIns
     onScopeDelete,
     onScopesClear,
     onCopy,
+    locale,
+    translations,
+    translateOutput,
   } = options;
+
+  // Initialize i18n if locale options provided
+  if (locale || translations || translateOutput !== undefined) {
+    initI18n({ locale, translations, translateOutput });
+  }
 
   // Create element
   const element = document.createElement('agent-ui-annotation') as AnnotationElement;
@@ -182,6 +197,7 @@ export function init(options: Omit<AnnotationOptions, 'autoActivate'> = {}): Ann
   return createAnnotation({ ...options, autoActivate: true });
 }
 
-// Re-export types
-export type { Scope, AnnotationId, OutputLevel, ThemeMode, Settings };
+// Re-export types and i18n
+export type { Scope, AnnotationId, OutputLevel, ThemeMode, Settings, PartialTranslationStrings };
 export { AnnotationElement, registerAnnotationElement };
+export { initI18n } from '../../core/i18n';

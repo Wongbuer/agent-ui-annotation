@@ -4,6 +4,7 @@
 
 import type { Settings, OutputLevel } from '../../core/types';
 import { SCOPE_COLORS } from '../../core/types';
+import { t } from '../../core/i18n';
 
 export interface SettingsPanelOptions {
   settings: Settings;
@@ -17,24 +18,25 @@ export function renderSettingsPanel(options: SettingsPanelOptions): string {
   const { settings, skipAnimation = false } = options;
 
   const outputLevelOptions: { value: OutputLevel; label: string }[] = [
-    { value: 'compact', label: 'Compact' },
-    { value: 'standard', label: 'Standard' },
-    { value: 'detailed', label: 'Detailed' },
-    { value: 'forensic', label: 'Forensic' },
+    { value: 'compact', label: t('settings.outputLevels.compact') },
+    { value: 'standard', label: t('settings.outputLevels.standard') },
+    { value: 'detailed', label: t('settings.outputLevels.detailed') },
+    { value: 'forensic', label: t('settings.outputLevels.forensic') },
   ];
 
   const colorOptions = Object.entries(SCOPE_COLORS).map(([name, hex]) => ({
     name,
+    translatedName: t(`colors.${name}`),
     hex,
     active: settings.scopeColor === hex,
   }));
 
   return `
     <div class="settings-panel${skipAnimation ? ' no-animate' : ''}" data-annotation-settings>
-      <div class="settings-title">Settings</div>
+      <div class="settings-title">${t('settings.title')}</div>
 
       <div class="settings-group">
-        <label class="settings-label">Output Level</label>
+        <label class="settings-label">${t('settings.outputLevel')}</label>
         <select class="settings-select" data-setting="outputLevel">
           ${outputLevelOptions
             .map(
@@ -46,7 +48,7 @@ export function renderSettingsPanel(options: SettingsPanelOptions): string {
       </div>
 
       <div class="settings-group">
-        <label class="settings-label">Marker Color</label>
+        <label class="settings-label">${t('settings.markerColor')}</label>
         <div class="color-picker">
           ${colorOptions
             .map(
@@ -56,7 +58,7 @@ export function renderSettingsPanel(options: SettingsPanelOptions): string {
                   style="background: ${color.hex};"
                   data-setting="scopeColor"
                   data-value="${color.hex}"
-                  title="${color.name}"
+                  title="${color.translatedName}"
                 ></button>`
             )
             .join('')}
@@ -65,19 +67,19 @@ export function renderSettingsPanel(options: SettingsPanelOptions): string {
 
       <div class="settings-group">
         <div class="settings-toggle">
-          <span class="settings-toggle-label">Block page interactions</span>
+          <span class="settings-toggle-label">${t('settings.blockInteractions')}</span>
           <button
             class="settings-switch ${settings.blockInteractions ? 'active' : ''}"
             data-setting="blockInteractions"
             data-value="${!settings.blockInteractions}"
-            title="Prevent clicks from activating buttons/links while annotating"
+            title="${t('settings.blockInteractionsHint')}"
           ></button>
         </div>
       </div>
 
       <div class="settings-group">
         <div class="settings-toggle">
-          <span class="settings-toggle-label">Show tooltips</span>
+          <span class="settings-toggle-label">${t('settings.showTooltips')}</span>
           <button
             class="settings-switch ${settings.showTooltips ? 'active' : ''}"
             data-setting="showTooltips"
@@ -88,7 +90,7 @@ export function renderSettingsPanel(options: SettingsPanelOptions): string {
 
       <div class="settings-group">
         <div class="settings-toggle">
-          <span class="settings-toggle-label">Auto-clear after copy</span>
+          <span class="settings-toggle-label">${t('settings.autoClearAfterCopy')}</span>
           <button
             class="settings-switch ${settings.autoClearAfterCopy ? 'active' : ''}"
             data-setting="autoClearAfterCopy"

@@ -1,4 +1,9 @@
 import { AgentUIAnnotation, useAgentUIAnnotation } from 'agent-ui-annotation/react';
+import { initI18n } from 'agent-ui-annotation';
+
+// Optional: Initialize i18n at app startup. Not needed if using English (default).
+// Change locale to 'zh-CN' for Chinese, or omit this call entirely for English.
+initI18n({ locale: 'en' });
 
 export default function App() {
   const { ref, activate, copyOutput } = useAgentUIAnnotation();

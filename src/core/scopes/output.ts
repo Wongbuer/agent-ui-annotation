@@ -4,6 +4,7 @@
 
 import type { Scope, OutputLevel, EnvironmentInfo } from '../types';
 import { formatStyles } from '../element/styles';
+import { tOutput } from '../i18n';
 
 /**
  * Get environment info for forensic output
@@ -31,7 +32,7 @@ export function getEnvironmentInfo(): EnvironmentInfo {
  */
 function generateCompactScope(scope: Scope): string {
   const element = scope.elementInfo.humanReadable;
-  const comment = scope.comment || '(no comment)';
+  const comment = scope.comment || tOutput('marker.noComment');
   return `${scope.number}. **${element}**: ${comment}`;
 }
 
@@ -42,13 +43,13 @@ function generateStandardScope(scope: Scope): string {
   const lines: string[] = [];
 
   lines.push(`### ${scope.number}. ${scope.elementInfo.humanReadable}`);
-  lines.push(`**Location:** ${scope.elementInfo.selectorPath}`);
+  lines.push(`**${tOutput('output.location')}:** ${scope.elementInfo.selectorPath}`);
 
   if (scope.selectedText) {
-    lines.push(`**Selected text:** "${scope.selectedText}"`);
+    lines.push(`**${tOutput('output.selectedText')}:** "${scope.selectedText}"`);
   }
 
-  lines.push(`**Feedback:** ${scope.comment || '(no comment)'}`);
+  lines.push(`**${tOutput('output.feedback')}:** ${scope.comment || tOutput('marker.noComment')}`);
 
   return lines.join('\n');
 }
@@ -64,14 +65,14 @@ function generateDetailedScope(scope: Scope): string {
   lines.push('');
 
   // Location info
-  lines.push(`**Location:** \`${info.selectorPath}\``);
+  lines.push(`**${tOutput('output.location')}:** \`${info.selectorPath}\``);
 
   if (info.id) {
-    lines.push(`**ID:** ${info.id}`);
+    lines.push(`**${tOutput('output.id')}:** ${info.id}`);
   }
 
   if (info.classes.length > 0) {
-    lines.push(`**Classes:** ${info.classes.join(', ')}`);
+    lines.push(`**${tOutput('output.classes')}:** ${info.classes.join(', ')}`);
   }
 
   // Position
@@ -79,24 +80,24 @@ function generateDetailedScope(scope: Scope): string {
   lines.push(`**Position:** ${Math.round(rect.left)}x${Math.round(rect.top)}, ${Math.round(rect.width)}×${Math.round(rect.height)}px`);
 
   if (info.isFixed) {
-    lines.push(`**Positioning:** Fixed/Sticky`);
+    lines.push(`**${tOutput('output.positioning')}:** ${tOutput('output.fixedSticky')}`);
   }
 
   // Selected text
   if (scope.selectedText) {
-    lines.push(`**Selected text:** "${scope.selectedText}"`);
+    lines.push(`**${tOutput('output.selectedText')}:** "${scope.selectedText}"`);
   }
 
   // Nearby context
   const ctx = info.nearbyContext;
   if (ctx.parent || ctx.containingLandmark) {
     lines.push('');
-    lines.push('**Context:**');
+    lines.push(`**${tOutput('output.context')}:**`);
     if (ctx.containingLandmark) {
-      lines.push(`- Landmark: ${ctx.containingLandmark}`);
+      lines.push(`- ${tOutput('output.landmark')}: ${ctx.containingLandmark}`);
     }
     if (ctx.parent) {
-      lines.push(`- Parent: ${ctx.parent}`);
+      lines.push(`- ${tOutput('output.parent')}: ${ctx.parent}`);
     }
     if (ctx.previousSibling) {
       lines.push(`- Previous: ${ctx.previousSibling}`);
@@ -107,7 +108,7 @@ function generateDetailedScope(scope: Scope): string {
   }
 
   lines.push('');
-  lines.push(`**Feedback:** ${scope.comment || '(no comment)'}`);
+  lines.push(`**${tOutput('output.feedback')}:** ${scope.comment || tOutput('marker.noComment')}`);
 
   return lines.join('\n');
 }
@@ -123,32 +124,32 @@ function generateForensicScope(scope: Scope, _env: EnvironmentInfo): string {
   lines.push('');
 
   // Full DOM path
-  lines.push('#### DOM Path');
+  lines.push(`#### ${tOutput('output.domPath')}`);
   lines.push('```');
   lines.push(info.fullDomPath);
   lines.push('```');
   lines.push('');
 
   // CSS Selector
-  lines.push(`**Selector:** \`${info.selectorPath}\``);
+  lines.push(`**${tOutput('output.selector')}:** \`${info.selectorPath}\``);
   lines.push('');
 
   // Element details
-  lines.push('#### Element Details');
-  lines.push(`- **Tag:** ${info.tagName}`);
+  lines.push(`#### ${tOutput('output.elementDetails')}`);
+  lines.push(`- **${tOutput('output.tag')}:** ${info.tagName}`);
 
   if (info.id) {
-    lines.push(`- **ID:** ${info.id}`);
+    lines.push(`- **${tOutput('output.id')}:** ${info.id}`);
   }
 
   if (info.classes.length > 0) {
-    lines.push(`- **Classes:** ${info.classes.join(', ')}`);
+    lines.push(`- **${tOutput('output.classes')}:** ${info.classes.join(', ')}`);
   }
 
   // Attributes
   const attrEntries = Object.entries(info.attributes);
   if (attrEntries.length > 0) {
-    lines.push('- **Attributes:**');
+    lines.push(`- **${tOutput('output.attributes')}:**`);
     for (const [key, value] of attrEntries.slice(0, 10)) {
       lines.push(`  - ${key}: "${value}"`);
     }
@@ -156,39 +157,39 @@ function generateForensicScope(scope: Scope, _env: EnvironmentInfo): string {
 
   // Content preview
   if (info.innerText) {
-    lines.push(`- **Text content:** "${info.innerText}"`);
+    lines.push(`- **${tOutput('output.textContent')}:** "${info.innerText}"`);
   }
 
   lines.push('');
 
   // Bounding box
-  lines.push('#### Position & Dimensions');
+  lines.push(`#### ${tOutput('output.positionDimensions')}`);
   const rect = info.rect;
-  lines.push(`- **Bounding box:** (${Math.round(rect.left)}, ${Math.round(rect.top)}) to (${Math.round(rect.right)}, ${Math.round(rect.bottom)})`);
-  lines.push(`- **Size:** ${Math.round(rect.width)}×${Math.round(rect.height)}px`);
-  lines.push(`- **Fixed positioning:** ${info.isFixed ? 'Yes' : 'No'}`);
+  lines.push(`- **${tOutput('output.boundingBox')}:** (${Math.round(rect.left)}, ${Math.round(rect.top)}) to (${Math.round(rect.right)}, ${Math.round(rect.bottom)})`);
+  lines.push(`- **${tOutput('output.size')}:** ${Math.round(rect.width)}×${Math.round(rect.height)}px`);
+  lines.push(`- **${tOutput('output.fixedPositioning')}:** ${info.isFixed ? tOutput('output.yes') : tOutput('output.no')}`);
   lines.push('');
 
   // Accessibility
-  lines.push('#### Accessibility');
+  lines.push(`#### ${tOutput('output.accessibility')}`);
   const a11y = info.accessibility;
-  lines.push(`- **Role:** ${a11y.role || 'none'}`);
-  lines.push(`- **Interactive:** ${a11y.isInteractive ? 'Yes' : 'No'}`);
+  lines.push(`- **${tOutput('output.role')}:** ${a11y.role || tOutput('output.none')}`);
+  lines.push(`- **${tOutput('output.interactive')}:** ${a11y.isInteractive ? tOutput('output.yes') : tOutput('output.no')}`);
 
   if (a11y.ariaLabel) {
-    lines.push(`- **ARIA Label:** "${a11y.ariaLabel}"`);
+    lines.push(`- **${tOutput('output.ariaLabel')}:** "${a11y.ariaLabel}"`);
   }
   if (a11y.ariaDescribedBy) {
-    lines.push(`- **Described by:** "${a11y.ariaDescribedBy}"`);
+    lines.push(`- **${tOutput('output.describedBy')}:** "${a11y.ariaDescribedBy}"`);
   }
   if (a11y.tabIndex !== null) {
-    lines.push(`- **Tab index:** ${a11y.tabIndex}`);
+    lines.push(`- **${tOutput('output.tabIndex')}:** ${a11y.tabIndex}`);
   }
   lines.push('');
 
   // Computed styles
   if (info.computedStyles) {
-    lines.push('#### Computed Styles');
+    lines.push(`#### ${tOutput('output.computedStyles')}`);
     lines.push('```css');
     lines.push(formatStyles(info.computedStyles as unknown as Record<string, string>));
     lines.push('```');
@@ -197,42 +198,42 @@ function generateForensicScope(scope: Scope, _env: EnvironmentInfo): string {
 
   // Context
   const ctx = info.nearbyContext;
-  lines.push('#### Context');
+  lines.push(`#### ${tOutput('output.context')}`);
   if (ctx.containingLandmark) {
-    lines.push(`- **Landmark:** ${ctx.containingLandmark}`);
+    lines.push(`- **${tOutput('output.landmark')}:** ${ctx.containingLandmark}`);
   }
   if (ctx.parent) {
-    lines.push(`- **Parent:** ${ctx.parent}`);
+    lines.push(`- **${tOutput('output.parent')}:** ${ctx.parent}`);
   }
   if (ctx.previousSibling) {
-    lines.push(`- **Previous sibling:** ${ctx.previousSibling}`);
+    lines.push(`- **${tOutput('output.previousSibling')}:** ${ctx.previousSibling}`);
   }
   if (ctx.nextSibling) {
-    lines.push(`- **Next sibling:** ${ctx.nextSibling}`);
+    lines.push(`- **${tOutput('output.nextSibling')}:** ${ctx.nextSibling}`);
   }
   lines.push('');
 
   // Selected text
   if (scope.selectedText) {
-    lines.push(`**Selected text:** "${scope.selectedText}"`);
+    lines.push(`**${tOutput('output.selectedText')}:** "${scope.selectedText}"`);
     lines.push('');
   }
 
   // Multi-select info
   if (scope.isMultiSelect) {
-    lines.push('*Created via multi-select*');
+    lines.push(`*${tOutput('output.multiSelectNote')}*`);
     lines.push('');
   }
 
   // Timestamps
-  lines.push('#### Metadata');
-  lines.push(`- **Created:** ${new Date(scope.createdAt).toISOString()}`);
-  lines.push(`- **Updated:** ${new Date(scope.updatedAt).toISOString()}`);
+  lines.push(`#### ${tOutput('output.metadata')}`);
+  lines.push(`- **${tOutput('output.created')}:** ${new Date(scope.createdAt).toISOString()}`);
+  lines.push(`- **${tOutput('output.updated')}:** ${new Date(scope.updatedAt).toISOString()}`);
   lines.push('');
 
   // Feedback
-  lines.push('#### Feedback');
-  lines.push(scope.comment || '(no comment)');
+  lines.push(`#### ${tOutput('output.feedback')}`);
+  lines.push(scope.comment || tOutput('marker.noComment'));
 
   return lines.join('\n');
 }
@@ -244,15 +245,15 @@ function generateHeader(level: OutputLevel, scopeCount: number): string {
   const lines: string[] = [];
   const path = window.location.pathname;
 
-  lines.push(`## Page Feedback: ${path}`);
+  lines.push(`## ${tOutput('output.pageFeedback')}: ${path}`);
 
   if (level === 'compact') {
     lines.push('');
     return lines.join('\n');
   }
 
-  lines.push(`**Viewport:** ${window.innerWidth}×${window.innerHeight}`);
-  lines.push(`**Scopes:** ${scopeCount}`);
+  lines.push(`**${tOutput('output.viewport')}:** ${window.innerWidth}×${window.innerHeight}`);
+  lines.push(`**${tOutput('output.scopes')}:** ${scopeCount}`);
   lines.push('');
 
   return lines.join('\n');
@@ -264,16 +265,16 @@ function generateHeader(level: OutputLevel, scopeCount: number): string {
 function generateForensicHeader(env: EnvironmentInfo, scopeCount: number): string {
   const lines: string[] = [];
 
-  lines.push(`## Page Feedback: ${env.url}`);
+  lines.push(`## ${tOutput('output.pageFeedback')}: ${env.url}`);
   lines.push('');
-  lines.push('### Environment');
-  lines.push(`- **URL:** ${env.url}`);
-  lines.push(`- **Viewport:** ${env.viewport.width}×${env.viewport.height}`);
-  lines.push(`- **Device pixel ratio:** ${env.devicePixelRatio}`);
-  lines.push(`- **Scroll position:** (${env.scrollPosition.x}, ${env.scrollPosition.y})`);
-  lines.push(`- **Timestamp:** ${env.timestamp}`);
-  lines.push(`- **User agent:** ${env.userAgent}`);
-  lines.push(`- **Total scopes:** ${scopeCount}`);
+  lines.push(`### ${tOutput('output.environment')}`);
+  lines.push(`- **${tOutput('output.url')}:** ${env.url}`);
+  lines.push(`- **${tOutput('output.viewport')}:** ${env.viewport.width}×${env.viewport.height}`);
+  lines.push(`- **${tOutput('output.devicePixelRatio')}:** ${env.devicePixelRatio}`);
+  lines.push(`- **${tOutput('output.scrollPosition')}:** (${env.scrollPosition.x}, ${env.scrollPosition.y})`);
+  lines.push(`- **${tOutput('output.timestamp')}:** ${env.timestamp}`);
+  lines.push(`- **${tOutput('output.userAgent')}:** ${env.userAgent}`);
+  lines.push(`- **${tOutput('output.totalScopes')}:** ${scopeCount}`);
   lines.push('');
   lines.push('---');
   lines.push('');
@@ -286,7 +287,7 @@ function generateForensicHeader(env: EnvironmentInfo, scopeCount: number): strin
  */
 export function generateOutput(scopes: Scope[], level: OutputLevel): string {
   if (scopes.length === 0) {
-    return '## Page Feedback\n\nNo scopes created.';
+    return `## ${tOutput('output.pageFeedback')}\n\n${tOutput('output.noScopes')}`;
   }
 
   const sortedScopes = [...scopes].sort((a, b) => a.number - b.number);

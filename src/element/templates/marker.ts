@@ -3,6 +3,7 @@
  */
 
 import type { Scope } from '../../core/types';
+import { t } from '../../core/i18n';
 
 export interface MarkerRenderOptions {
   scope: Scope;
@@ -85,7 +86,7 @@ function renderMarkerTooltip(scope: Scope, skipAnimation: boolean): string {
     ? scope.comment.length > 100
       ? scope.comment.slice(0, 100) + '...'
       : scope.comment
-    : '(no comment)';
+    : t('marker.noComment');
 
   return `
     <div class="marker-tooltip${skipAnimation ? ' no-animate' : ''}">

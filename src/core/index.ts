@@ -27,6 +27,23 @@ export type {
 
 export { SCOPE_COLORS } from './types';
 
+// i18n
+export {
+  initI18n,
+  registerLocale,
+  t,
+  tOutput,
+  getCurrentTranslations,
+  isOutputTranslationEnabled,
+  resetI18n,
+  en,
+  zhCN,
+  type TranslationStrings,
+  type PartialTranslationStrings,
+  type I18nOptions,
+  type BuiltInLocale,
+} from './i18n';
+
 // Store
 export { createStore, type Store, type Listener, type Selector, type Unsubscribe } from './store';
 
