@@ -15,5 +15,11 @@ export default defineConfig({
   build: {
     outDir: '../dist-demo',
     emptyOutDir: true,
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'demo/index.html'),
+        'workflow-animation': resolve(__dirname, 'demo/workflow-animation.html'),
+      },
+    },
   },
 });

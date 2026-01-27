@@ -34,6 +34,7 @@
   ],
   "scripts": {
     "dev": "vite",
+    "dev:demo": "vite --config vite.config.demo.ts",
     "build": "tsc && vite build",
     "build:demo": "vite build --config vite.config.demo.ts",
     "preview": "vite preview",
