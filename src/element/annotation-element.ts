@@ -58,8 +58,10 @@ export class AnnotationElement extends HTMLElement {
   // Track which marker tooltip has animated (to prevent re-animation)
   private animatedMarkerTooltipId: string | null = null;
 
-  // Bound resize handler for cleanup in disconnectedCallback
+  // Bound handlers for cleanup in disconnectedCallback
   private boundHandleResize = () => this.handleWindowResize();
+  private boundHandleMouseMove = (e: MouseEvent) => this.handleMouseMove(e);
+  private boundHandleDocumentClick = (e: Event) => this.handleDocumentClick(e);
 
   // Track last rendered settings to avoid unnecessary re-renders when settings panel is open
   private lastRenderedSettings: string | null = null;
@@ -119,6 +121,8 @@ export class AnnotationElement extends HTMLElement {
     }
 
     window.removeEventListener('resize', this.boundHandleResize);
+    document.removeEventListener('mousemove', this.boundHandleMouseMove);
+    document.removeEventListener('click', this.boundHandleDocumentClick);
 
     if (this.core) {
       this.core.destroy();
@@ -226,26 +230,57 @@ export class AnnotationElement extends HTMLElement {
     this.shadow.addEventListener('mouseout', this.handleMouseOut.bind(this));
 
     // Track mouse position for tooltip
-    document.addEventListener('mousemove', this.handleMouseMove.bind(this));
+    document.addEventListener('mousemove', this.boundHandleMouseMove);
 
     // Handle keyboard in popup
     this.shadow.addEventListener('keydown', this.handleKeyDown.bind(this) as EventListener);
 
     // Handle IME composition
     this.shadow.addEventListener('compositionstart', () => { this.isComposing = true; });
-    this.shadow.addEventListener('compositionend', () => { this.isComposing = false; });
+    this.shadow.addEventListener('compositionend', () => {
+      this.isComposing = false;
+      if (this.core) this.render(this.core.store.getState());
+    });
 
     // Handle select change for settings
     this.shadow.addEventListener('change', this.handleChange.bind(this));
 
     // Close settings panel when clicking outside
-    document.addEventListener('click', this.handleDocumentClick.bind(this));
+    document.addEventListener('click', this.boundHandleDocumentClick);
     window.addEventListener('resize', this.boundHandleResize);
   }
 
   private handleWindowResize() {
     if (!this.core) return;
-    this.positionToolbar(this.core.store.getState());
+
+    const state = this.core.store.getState();
+
+    // Recompute marker positions from live element references
+    let updated = false;
+    const newScopes = new Map(state.scopes);
+    for (const [id, scope] of newScopes) {
+      if (!scope.element) continue;
+      // Verify element is still in the DOM
+      if (!scope.element.isConnected) continue;
+
+      const rect = scope.element.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const newClickX = centerX;
+      const newClickY = scope.elementInfo.isFixed ? centerY : centerY + window.scrollY;
+
+      if (newClickX !== scope.clickX || newClickY !== scope.clickY) {
+        newScopes.set(id, { ...scope, clickX: newClickX, clickY: newClickY });
+        updated = true;
+      }
+    }
+
+    if (updated) {
+      this.core.store.setState({ scopes: newScopes });
+    }
+
+    // Reposition toolbar (render will also be triggered by state change if scopes updated)
+    this.render(this.core.store.getState());
   }
 
   private handleDocumentClick(event: Event) {
